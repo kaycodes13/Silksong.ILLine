@@ -5,10 +5,10 @@ schemaVersion = "0.0.1"
 # The name of the team you are publishing as
 namespace = "kaycodes13"
 # max 250 characters
-description = "Helper mod for debugging your mods. Makes stack traces print IL offsets when no line number can be found, so you can track errors through the base game's code."
+description = "Helper mod for debugging your mods. Makes stack traces print IL offsets when no line number can be found, so you can trace errors through the base game's code."
 
 # Replace this with a correct repo URL if the default is not accurate
-websiteUrl = "https://github.com/kaycodes13/ILLine"
+websiteUrl = "https://github.com/kaycodes13/Silksong.ILLine"
 containsNsfwContent = false
 
 
