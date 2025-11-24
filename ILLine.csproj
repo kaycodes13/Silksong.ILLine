@@ -36,7 +36,7 @@
     />
     <PackageReference
       Include="Silksong.GameLibs"
-      Version="*-*"
+      Version="1.1.0-silksong1.0.29315"
       PrivateAssets="all"
 
     />
