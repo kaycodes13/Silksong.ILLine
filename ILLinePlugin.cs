@@ -1,8 +1,8 @@
 using BepInEx;
-using System.Diagnostics;
-using System.Reflection;
 using HarmonyLib;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Reflection;
 using System.Reflection.Emit;
 
 namespace ILLine;
@@ -26,7 +26,7 @@ file class ReplaceLineNumber {
 				new(x => CallsMethod(x, "GetFileLineNumber"))
 			])
 			.RemoveInstructions(2)
-			.Insert(Transpilers.EmitDelegate(GetLineOrILOffset))
+			.Insert(Transpilers.EmitDelegate(GetLineAndILOffset))
 			.Start()
 			.MatchEndForward([
 				new(x => Ldloc(x, out frameIndex)),
@@ -35,20 +35,21 @@ file class ReplaceLineNumber {
 			.Advance(1)
 			.Insert([
 				new(OpCodes.Ldloc, frameIndex),
-				Transpilers.EmitDelegate(AppendLineOrILOffset)
+				Transpilers.EmitDelegate(AppendLineAndILOffset)
 			])
 			.InstructionEnumeration();
 	}
 
-	static string GetLineOrILOffset(StackFrame frame) {
+	static string GetLineAndILOffset(StackFrame frame) {
 		int line = frame.GetFileLineNumber();
+		int offset = frame.GetILOffset();
 		return (line > 0)
-			? line.ToString()
-			: $"IL_{frame.GetILOffset():X4}";
+			? $"{line} [IL_{offset:X4}]"
+			: $"IL_{offset:X4}";
 	}
 
-	static string AppendLineOrILOffset(string currentText, StackFrame frame)
-		=> $"{currentText} (at {GetLineOrILOffset(frame)})";
+	static string AppendLineAndILOffset(string currentText, StackFrame frame)
+		=> $"{currentText} (at {GetLineAndILOffset(frame)})";
 
 	static bool CallsMethod(CodeInstruction x, string name) =>
 		(x.opcode == OpCodes.Call || x.opcode == OpCodes.Callvirt)
